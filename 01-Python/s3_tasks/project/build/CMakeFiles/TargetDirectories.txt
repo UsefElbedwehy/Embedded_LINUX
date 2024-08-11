@@ -1,0 +1,3 @@
+/home/usef/delete/s3_tasks/project/build/CMakeFiles/edit_cache.dir
+/home/usef/delete/s3_tasks/project/build/CMakeFiles/rebuild_cache.dir
+/home/usef/delete/s3_tasks/project/build/CMakeFiles/USef.dir
