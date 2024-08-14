@@ -10,6 +10,5 @@ Embedded Linux
 <code>
 git clone https://github.com/UsefElbedwehy/Embedded_LINUX.git
 </pre>
-</div>
 </body>
 <html>
