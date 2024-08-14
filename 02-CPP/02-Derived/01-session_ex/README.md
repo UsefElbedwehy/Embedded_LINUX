@@ -11,9 +11,8 @@ Function overloading:
 <div style="background-color: #f5f5f5; padding: 10px; border-radius: 4px; border: 1px solid #ddd;">
 <pre><code>gobjdump -t ex1.out | grep -i mul</code></pre>
 </div>
-
-<pre>
 <p>Output:</p>
+<pre>
 <code>
 000000000000133a l     F .text  0000000000000019              _GLOBAL__sub_I__Z8multiplyii
 000000000000122c g     F .text  000000000000004a              _Z8multiplyff
