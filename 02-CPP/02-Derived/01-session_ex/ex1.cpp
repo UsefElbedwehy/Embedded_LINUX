@@ -145,10 +145,11 @@
 // }
 int main(){
 
-    int* a = NULL;
-    char* y =NULL;
-
-    a = reinterpret_cast<int*>(y);
+    std::cout << "Hello Usef" << std::endl;
+    std::cout << "Hello Usef" << std::endl;
+    std::cout << "Hello Usef" << std::endl;
+    std::cout << "Hello Usef" << std::endl;
+    std::cout << "Hello Usef" << std::endl;
 
     return 0;
 }
