@@ -55,6 +55,61 @@ int main() {
     <ul>
         <li>Use <code>const</code> when you want to define a variable that should not be modified after initialization, but its value might not be known until runtime.</li>
         <li>Use <code>constexpr</code> when you need to ensure that a variable or function is evaluated at compile-time, which is useful for compile-time constants, array sizes, and template arguments.</li>
-    </ul>
+        </ul>
+<h2>Typecasting in C++</h2>
+<p>Typecasting in C++ refers to converting a variable from one data type to another. This can be done in two main ways: implicit (automatic) typecasting and explicit typecasting.</p>
+<h3>1. Implicit Typecasting</h3>
+<p>Also known as automatic type conversion, implicit typecasting occurs when the compiler automatically converts one data type to another. This usually happens when you assign a value of one type to a variable of another type.</p>
+<pre><code>
+int a = 5;
+double b = a; // 'a' is implicitly converted from int to double
+</code></pre>
+<p>In the above example, the integer <code>a</code> is implicitly converted to a double when assigned to <code>b</code>.</p>
+<h3>2. Explicit Typecasting</h3>
+<p>Explicit typecasting is when you manually convert a variable from one type to another. There are several ways to perform explicit typecasting in C++:</p>
+<h4>a. C-style Cast</h4>
+<p>The C-style cast is the simplest form of casting. It is performed by placing the desired type in parentheses before the variable.</p>
+<pre><code>
+int a = 5;
+double b = (double)a; // Explicitly cast 'a' to double
+</code></pre>
+<h4>b. C++-style Casts</h4>
+<p>C++ provides four types of casts that are more specific and safer than the C-style cast:</p>
+<ul>
+    <li><b>static_cast:</b> Used for most type conversions, such as converting between related types (e.g., converting <code>int</code> to <code>double</code>).</li>
+</ul>
+<pre><code>
+int a = 5;
+double b = static_cast&lt;double&gt;(a);
+</code></pre>
+<ul>
+    <li><b>dynamic_cast:</b> Used for safely casting pointers or references to classes up and down the inheritance hierarchy. It's mostly used with polymorphic types (types with virtual functions).</li>
+</ul>
+<pre><code>
+class Base { virtual void func() {} };
+class Derived : public Base {};
+Base* basePtr = new Derived;
+Derived* derivedPtr = dynamic_cast&lt;Derived*&gt;(basePtr); // Safe downcast
+</code></pre>
+<ul>
+    <li><b>const_cast:</b> Used to add or remove the <code>const</code> qualifier from a variable.</li>
+</ul>
+<pre><code>
+const int a = 10;
+int* b = const_cast&lt;int*&gt;(&a);
+</code></pre>
+<ul>
+    <li><b>reinterpret_cast:</b> Used for low-level casts that might reinterpret the bits of the value, such as casting between unrelated pointer types.</li>
+</ul>
+<pre><code>
+int* a = new int(10);
+char* b = reinterpret_cast&lt;char*&gt;(a); // Reinterprets the memory address as a char pointer
+</code></pre>
+<h3>Summary</h3>
+<ul>
+    <li><b>Implicit Typecasting</b> is automatic and usually safe.</li>
+    <li><b>Explicit Typecasting</b> requires the developer to specify the type conversion, using C-style casts or the more precise C++-style casts (<code>static_cast</code>, <code>dynamic_cast</code>, <code>const_cast</code>, and <code>reinterpret_cast</code>).</li>
+</ul>
+<p>Each cast type in C++ has specific use cases and restrictions, making them safer and more suitable for certain tasks than the generic C-style cast.</p>
 </body>
 </html>

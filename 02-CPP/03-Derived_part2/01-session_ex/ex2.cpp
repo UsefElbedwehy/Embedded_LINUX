@@ -1,5 +1,16 @@
 #include <iostream>
 #define end 0
+
+constexpr int square(int n){
+    
+    if(n>20){
+        //std::cout << n << std::endl;
+    }
+    return n*n;
+}
+
+
+
 int main(){
     int xoffset = 100;
     int yoffset = 300;
@@ -68,18 +79,27 @@ int main(){
     // }(12);
     // std::cout << "The xoffset is: " << xoffset << std::endl; 
 
-    [&xoffset = y, yoffset = x](int a,int b) mutable{
-        //xoffset = 300;   //error: assignment of read-only variable ‘offset’
-        std::cout << "The xoffset is: " << xoffset << std::endl;
-        std::cout << "The y is: " << a << std::endl;
-        std::cout << "The yoffset is: " << yoffset << std::endl;
-        std::cout << "The x is: " << b << std::endl; 
-    }(x,y);
-    std::cout << "The xoffset is: " << xoffset << std::endl;
-    std::cout << "The y is: " << y << std::endl;
-    std::cout << "The yoffset is: " << yoffset << std::endl;
-    std::cout << "The x is: " << x << std::endl; 
+    // [&xoffset = y, yoffset = x](int a,int b) mutable{
+    //     //xoffset = 300;   //error: assignment of read-only variable ‘offset’
+    //     std::cout << "The xoffset is: " << xoffset << std::endl;
+    //     std::cout << "The y is: " << a << std::endl;
+    //     std::cout << "The yoffset is: " << yoffset << std::endl;
+    //     std::cout << "The x is: " << b << std::endl; 
+    // }(x,y);
+    // std::cout << "The xoffset is: " << xoffset << std::endl;
+    // std::cout << "The y is: " << y << std::endl;
+    // std::cout << "The yoffset is: " << yoffset << std::endl;
+    // std::cout << "The x is: " << x << std::endl; 
 
+    // // const int var1 = rand();
+    // // // constexpr int var2 = rand();      //error 
+    // // constexpr int var2 = 30; 
+
+    // const int var3 = square(y);
+    // std::cout << var3 << std::endl;
+
+    constexpr int var3 = square(30);
+    std::cout << var3 << std::endl;
 
     return end;
 }
