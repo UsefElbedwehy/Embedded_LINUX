@@ -22,11 +22,14 @@ void find_even_odd(int* arr1,int size1){
 
 }
 
-int main(){
+#include <iostream>
+//01-string
+// int main(){
 
-    int arr[] = {1,2,3,4,9,8,7,6,5,10};
-    int size = sizeof(arr)/sizeof(arr[0]);
-    find_even_odd(arr,size);
+//     std::string my_name = "Usef Elbedwehy";
 
-    return 0;
-}
+//     std::cout << my_name.substr(0) << std::endl;
+
+
+//     return 0;
+// }
