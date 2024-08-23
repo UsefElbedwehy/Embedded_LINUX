@@ -5,6 +5,7 @@
 //@brief: (first task) -> create a function to ﬁnd the maximum number of array
 
 #include <iostream>
+#include <algorithm>  // Include for std::max_element
 
 int max_number(int* arr, int arr_size){
 
@@ -27,6 +28,8 @@ int main(){
     int arr[8] = {1,23,4,5,6,767,543,768};
     int size = sizeof(arr)/sizeof(arr[0]); // calc size of array
     std::cout << "The max number in the array is: " << max_number(arr,size) << std::endl;
+    //thinking in cpp
+    std::cout << "The max number: " << *std::max_element(std::begin(arr),std::end(arr)) << std::endl;
 
 
     return 0;
