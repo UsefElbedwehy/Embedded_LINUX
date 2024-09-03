@@ -55,7 +55,7 @@ int main() {
     return 0;
 }</code></pre>
 
-    <p><strong>Output:</strong></p>
+<p><strong>Output:</strong></p>
     <pre><code>Integer: 5
 Float: 3.14
 String: Hello, World!</code></pre>
