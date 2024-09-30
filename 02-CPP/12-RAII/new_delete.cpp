@@ -24,6 +24,14 @@ int main(int argc, char const *argv[])
     std::cout << std::endl;
 
 
+    //to solve it, you should assign pointer to null_ptr
+    p  = nullptr;
+    pp = nullptr;
+
+    *p = 6;         // Segmentation fault (core dumped)
+    pp[0] = 6;      // Segmentation fault (core dumped)
+
+
 
     return 0;
 }
