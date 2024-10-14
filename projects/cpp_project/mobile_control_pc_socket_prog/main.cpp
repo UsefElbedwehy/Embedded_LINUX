@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
 
     Server server(portNumber);
 
-    server.startHttp();
+    server.start();
 
     return 0;
 }
