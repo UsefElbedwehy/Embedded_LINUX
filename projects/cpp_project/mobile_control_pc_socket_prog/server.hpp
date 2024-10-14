@@ -18,13 +18,19 @@ private:
     static const int PORT_NUMBER ;
     static const int MAX_CONNECTION_NUMBER = 5;
     static const int SEND_BUFFER_SIZE      = 100;
-    static const int RECV_BUFFER_SIZE      = 1023;
+    static const int RECV_BUFFER_SIZE      = 1024;
+    socklen_t addrlen = sizeof(server_address);
     std::array<char, RECV_BUFFER_SIZE> recv_buffer{};
     std::string response = "Msg Received!";
+    fd_set master_set , read_fds;  // master set and temp set for `select()`
+    int max_sd;     // Maximum socket descriptor
     void bindToPort();
     void listenToClient();
     void acceptValidConnection();
+    void startMultiClient();
+    void check(int stat,const std::string& msg);
 public:
+
     void start();
     void startHttp();
     std::string receiveFromClient();
@@ -32,7 +38,7 @@ public:
     void sendToClient(const std::string& transData);
     void handleClient();
     void handleClientHttp();
-    void closeSocket();
+    void closeSocket(int sock);
     Server(int portno); //creste Socket
     ~Server(); //close socket
 };

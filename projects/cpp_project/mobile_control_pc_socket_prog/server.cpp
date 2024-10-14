@@ -2,59 +2,59 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <sys/select.h>
 #include <unistd.h>
 #include "server.hpp"
 #include <iostream>
 #include "terminal.hpp"
 #include <sstream>
+#include <vector>
 
-Server::Server(int portno) : port(portno)
+void Server::check(int stat,const std::string& msg)
 {
-    Terminal::showTitle("SERVER");
-    //[1] Creating socket file descriptor
-    server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_fd < 0) {
-        Terminal::printInColor("Socket failed!",Terminal::RED);
+    if(stat < 0){
+        printErrorMsg(msg);
         exit(EXIT_FAILURE);
     }
 }
 
+Server::Server(int portno) : port(portno)
+{
+    Terminal::showTitle("SERVER");
+    //[1] Creating socket file descriptor: AF_INET: IPV4 - SOCK_STREAM: TCP/IP
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    check(server_fd, "Socket Failed!");
+}
+
 void Server::bindToPort() {
     //[2] bind IP server_address and port number
-    server_address.sin_port = htons(port);  // IP port
-    server_address.sin_family = AF_INET;           // must be AF_INET
-    server_address.sin_addr.s_addr = INADDR_ANY;   // IP address
-
-    //  Bind the socket to the port
+    server_address.sin_port = htons(port); 
+    // htons (Host TO Network Short): The htons function converts a 16-bit number (like a port number) from host byte order (whatever the system is using) to network byte order (big-endian).
+    server_address.sin_family = AF_INET;          
+    server_address.sin_addr.s_addr = INADDR_ANY;  
     int bind_s = bind(server_fd, (struct sockaddr*)&server_address, sizeof(server_address));
-    if (bind_s < 0) {
-        Terminal::printInColor("Bind failed!",Terminal::RED);
-        exit(EXIT_FAILURE);
-    }
+    check(bind_s, "ERROR: Bind failed!\n");
 }
 
 void Server::listenToClient()
 {
     //[3] listen to any client request
     int listen_s = listen(server_fd, MAX_CONNECTION_NUMBER);
-    if (listen_s < 0) {
-        Terminal::printInColor("Listen failed!",Terminal::RED);
-        exit(EXIT_FAILURE);
-    }
-    std::cout << Terminal::CYAN << "Waiting for connection on port " << port << "..." << Terminal::RESET << std::endl;
+    check(listen_s, "ERROR: Listen failed!\n");
+    printConnectMsg(std::string("Waiting for connection on port...") );
+    std::cout << GREEN << port << RESET << std::endl;
 }
 
 void Server::acceptValidConnection() {
-    socklen_t addrlen = sizeof(server_address);
+    
     //[4] accept any valid connection request
     new_socket = accept(server_fd, (struct sockaddr*)&server_address, &addrlen);
-    if (new_socket < 0) {
-        Terminal::printInColor("Accept failed!",Terminal::RED);
-        exit(EXIT_FAILURE);
-    }
-    Terminal::printInColor("Connected!",Terminal::GREEN);
+    check(new_socket, "ERROR: Accept failed!");
+    printConnectMsg("Connected...!\n");
 }
-std::string Server::receiveFromClient() {
+
+std::string Server::receiveFromClient()
+{
     // (1)-Clear buffer before receiving
     memset(recv_buffer.data(), 0, recv_buffer.size());
 
@@ -119,19 +119,7 @@ std::string Server::receiveFromClientHttp()
 }
 
 void Server::sendToClient(const std::string& transData) {
-    std::string response = "HTTP/1.1 200 OK\r\n";
-    response += "Content-Type: text/plain\r\n";
-    response += "Connection: keep-alive\r\n"; // Keep the connection alive
-    response += "Content-Length: " + std::to_string(transData.size()) + "\r\n";
-    response += "\r\n"; // End of headers
-    response += transData; // Add the actual response body
-
-    int send_s = send(new_socket, response.c_str(), response.size(), 0);
-    if (send_s < 0) {
-        Terminal::printInColor("Sending failed!", Terminal::RED);
-    } else {
-        Terminal::printInColor("Response is sent!", Terminal::YELLOW);
-    }
+    send(new_socket, response.c_str(), response.size(), 0);
 }
 
 
@@ -158,7 +146,7 @@ void Server::handleClient() {
             print("Openning youtube...");
             openYoutube();
         }else if (command == "calculator") {
-            print("Openning calculator...");
+            print("Openning calculator...");ERROR: 
             openCalculator();
         }else if (command == "vscode") {
             print("Openning vscode...");
@@ -178,12 +166,115 @@ void Server::handleClient() {
     }
 }
 
+void Server::start()
+{   
+        //[1] bind to port
+        bindToPort();
+
+        //[2] listen for incoming connections
+        listenToClient();
+
+        //[3] accept a new connection
+        acceptValidConnection();
+
+
+        //[4] handle the client
+        handleClient(); // Receive the command, process, and send a response
+
+        //[5] close the connection with the current client
+        closeSocket(server_fd);
+}
+
+void Server::startMultiClient() {   
+    // [1] Bind to port
+    bindToPort();
+
+    // [2] Listen for incoming connections
+    listenToClient();
+
+    // Initialize the `select()` master set
+    FD_ZERO(&master_set);
+    FD_SET(server_fd, &master_set);
+    max_sd = server_fd; // Start by tracking the server socket
+
+    std::vector<int> client_sockets(MAX_CONNECTION_NUMBER, 0); // Track client sockets
+
+    while (true) {
+        read_fds = master_set; // Copy the master set to read_fds (for select)
+
+        // `select()` to monitor multiple sockets
+        int activity = select(max_sd + 1, &read_fds, nullptr, nullptr, nullptr);
+        if (activity < 0 && errno != EINTR) {
+            perror("select error");
+            exit(EXIT_FAILURE);
+        }
+
+        // If something happened on the server socket, it’s an incoming connection
+        if (FD_ISSET(server_fd, &read_fds)) {
+            acceptValidConnection();
+
+            // Add new socket to the client_sockets list
+            for (int &client_socket : client_sockets) {
+                if (client_socket == 0) {
+                    client_socket = new_socket; // Assign the new socket
+                    FD_SET(new_socket, &master_set); // Add to the master set
+                    if (new_socket > max_sd) max_sd = new_socket; // Update max_sd
+                    break;
+                }
+            }
+        }
+
+        // Check all client sockets for incoming data
+        for (int &client_socket : client_sockets) {
+            if (FD_ISSET(client_socket, &read_fds)) {
+                // Clear buffer and receive data
+                memset(recv_buffer.data(), 0, recv_buffer.size());
+                int valread = recv(client_socket, recv_buffer.data(), RECV_BUFFER_SIZE, 0);
+
+                if (valread == 0) {
+                    // Client disconnected
+                    std::cout << "Client disconnected!" << std::endl;
+                    close(client_socket);
+                    FD_CLR(client_socket, &master_set); // Remove socket from master set
+                    client_socket = 0; // Mark socket as available
+                } else {
+                    // Process client command
+                    std::string command(recv_buffer.data(), valread);
+                    std::cout << "Command received: " << command << std::endl;
+
+                    if (command == "facebook") {
+                        std::string response = "Opening Facebook...";
+                        send(client_socket, response.c_str(), response.size(), 0);
+                    } else if (command == "exit") {
+                        std::string response = "Exiting...";
+                        send(client_socket, response.c_str(), response.size(), 0);
+                        close(client_socket);
+                        FD_CLR(client_socket, &master_set); // Remove socket from master set
+                        client_socket = 0; // Mark socket as available
+                    } else {
+                        std::string response = "Unknown command";
+                        send(client_socket, response.c_str(), response.size(), 0);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+//         //[4] handle the client
+//         handleClient(); // Receive the command, process, and send a response
+        
+//         //[5] close the connection with the current client
+//         closeSocket(server_fd);
+// }
+
 void Server::handleClientHttp()
 {
         while (true) {
         //receive
         std::string command = receiveFromClientHttp();
-
+    //std::cout << command << std::endl;
         // Process the command and take action
         if (command == "facebook")
         {
@@ -220,6 +311,7 @@ void Server::handleClientHttp()
         sendToClient(response);
 
     }
+    closeSocket(new_socket);
 }
 
 // work: connect and accept client, receive and respone then close, and reconnect again 
@@ -237,39 +329,18 @@ void Server::startHttp()
 
         //[4] handle the client
         handleClientHttp(); // Receive the command, process, and send a response
-
-        closeSocket();
         }
         //[5] close the connection with the current client
+        close(server_fd);
 }
 
-void Server::start()
-{   
-        //[1] bind to port
-        bindToPort();
-
-        //[2] listen for incoming connections
-        listenToClient();
-
-        //[3] accept a new connection
-        acceptValidConnection();
-
-
-        //[4] handle the client
-        handleClient(); // Receive the command, process, and send a response
-
-        //[5] close the connection with the current client
-        closeSocket();
-}
-
-void Server::closeSocket(){
-    close(new_socket);
+void Server::closeSocket(int sock){
+    close(sock);
 }
 
 Server::~Server() {
-    std::cout << std::string(30,'-') << std::endl;
+    printMsg(std::string(30,'-'));
+    printWarningMsg("Socket closed!");
     //[7] close the sockets
-    std::cout << "socket closed!" << std::endl;
-    close(new_socket);
-    close(server_fd);
+    closeSocket(server_fd);
 }
