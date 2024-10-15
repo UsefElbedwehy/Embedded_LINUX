@@ -38,3 +38,7 @@ void Commands::openVSCode(){
         // Open VS Code
     system("code .");
 }
+
+void Commands::openTelegram() {
+    system("xdg-open https://web.telegram.org/");
+}

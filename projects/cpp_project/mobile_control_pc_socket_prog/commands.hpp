@@ -14,7 +14,7 @@ public:
     void openGithub();
     void openVSCode();
     void openCalculator();
-    
+    void openTelegram();
 };
 
 #endif
