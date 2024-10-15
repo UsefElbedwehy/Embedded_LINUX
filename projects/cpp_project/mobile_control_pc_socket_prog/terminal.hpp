@@ -16,18 +16,15 @@ protected:
     const std::string CYAN = "\033[36m";
     const std::string WHITE = "\033[37m";
     const std::string RESET = "\033[0m";
-public:
     void showTitle(const std::string &title);
-    void print(const std::string &msg);
-    void printInColor(const std::string &msg,const std::string& color);
-    void printInColorSameline(const std::string &msg1,const std::string &msg2, const std::string &color);
-
     void printErrorMsg(const std::string &msg);
     void printConnectMsg(const std::string &msg);
+    void printConnectPort(const std::string &msg , int port);
     void printWarningMsg(const std::string &msg);
     void printRecvMsg(const std::string &msg);
     void printSentMsg(const std::string &msg);
     void printMsg(const std::string &msg);
+public:
 };
 
 
