@@ -12,9 +12,10 @@ int main(int argc, char const *argv[])
     Terminal ter;
     std::string command;
 
-    Server server(portNumber);
+    TCPServerMClients tcpserver(portNumber);
 
-    server.start();
+    tcpserver.start();
+    
 
     return 0;
 }
