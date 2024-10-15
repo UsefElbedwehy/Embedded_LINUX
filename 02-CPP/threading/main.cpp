@@ -34,8 +34,10 @@ int main(int argc, char const *argv[])
     std::thread t1(findEven,start, end);
     std::thread t2(findOdd,start, end);
     
-    findEven(start, end);
-    findOdd(start, end);
+    t1.join();
+    t2.join();
+    // findEven(start, end);
+    // findOdd(start, end);
     
     auto stopTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stopTime - startTime);
