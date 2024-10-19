@@ -85,9 +85,9 @@ Srever/client TCP/IP network protocol  with custom transmision protocol.
         </li>
     </ul>
 <h4>Mobile view(client):</h4>
-<img src="Images/NETWORK_KIT.jpeg" alt="Custom protocol">
+<img src="Images/NETWORK_KIT.jpeg" alt="Custom protocol" width=300px>
 <h4>PC view(server):</h4>
-<img src="Images/PC_VIEW_1.png" alt="PC_VIEW">
+<img src="Images/PC_VIEW_1.png" alt="PC_VIEW" >
 <li>
 Srever/client TCP/IP network protocol  with HTTP POST transmision protocol.
 </li>
@@ -112,9 +112,9 @@ Srever/client TCP/IP network protocol  with HTTP POST transmision protocol.
     </ul>
     <h4>Mobile view:</h4>
     <h5>Setting IP and port, and making Content-Type: as text/plain (these setting are important to be sent in the hhtp POST request frame):</h5>
-<img src="Images/HTTP_POST_REQUEST.jpeg" alt="HTTP POST REQUEST SETTING">
+<img src="Images/HTTP_POST_REQUEST.jpeg" alt="HTTP POST REQUEST SETTING" width=300px>
 <h5>Here we write any command to be sent to pc .i.e facebook:</h5>
-<img src="Images/DATA_FOR_POST_REQUEST.jpeg" alt="HTTP POST REQUEST DATA TO BE SENT">
+<img src="Images/DATA_FOR_POST_REQUEST.jpeg" alt="HTTP POST REQUEST DATA TO BE SENT" width=300px>
 <li>
 Srever/Multiclient TCP/IP network protocl with custom transmision protocol.
 </li>
@@ -123,7 +123,7 @@ Srever/Multiclient TCP/IP network protocl with custom transmision protocol.
         Do the same like the first one put multiple times as it is for multiclient.</li>
     </ul>
     <h4>Mobile view:</h4>
-    <img src="Images/Multiple_Clients.jpeg" alt="Multiple client view">
+    <img src="Images/Multiple_Clients.jpeg" alt="Multiple client view" width=700px>
     <h4>PC view(server):</h4>
     <img src="Images/Server_MultipleClients_SOCKET.png" alt="Multiple client view">
 </ol>
