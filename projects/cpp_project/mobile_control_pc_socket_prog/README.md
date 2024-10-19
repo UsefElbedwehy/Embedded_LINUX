@@ -36,7 +36,7 @@
 <h2>Setup Instructions</h2>
 <ol>
     <li>Clone the repository:
-        <pre><code>git clone 
+        <pre><code>
 git clone https://github.com/UsefElbedwehy/Embedded_LINUX.git </code></pre>
     </li>
     <li>Navigate to the project directory: 
